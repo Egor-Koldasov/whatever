@@ -1,6 +1,6 @@
 {
-  "extends": "airbnb-base",
   "parser": "babel-eslint",
+  "root": true,
   "env": {
     "jest": true,
     "jasmine": true
