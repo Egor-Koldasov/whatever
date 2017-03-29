@@ -1,18 +1,16 @@
-export let scale = 0;
-export let massScale = 0;
-export const setScale = i => {
-  scale = i;
-  massScale = 0.01 / i;
-};
+// @flow
+import {getSize} from './lib/matter';
+import type {Matter} from './state/matterList';
+import config from './config';
 
-let equal = false;
-export const step = (target: Matter, others: Array<Matter>): Matter => {
+let equal = 0;
+export const step = (target: Matter, others: Array<Matter>, speed: number): Matter => {
   let life = 0;
   const forces: Array<{x: number, y: number}> = others.map((matter) => {
     const p1 = target.position;
     const p2 = matter.position;
     const distance: number = Math.sqrt(((p2.x - p1.x) ** 2) + ((p2.y - p1.y) ** 2));
-    const crossing = distance < (Math.max(2, target.mass*massScale) + Math.max(2, matter.mass*massScale));
+    const crossing = distance < getSize(target) + getSize(matter);
     if (crossing) {
       life = target.mass < matter.mass ? -1 :
         target.mass !== matter.mass ? matter.mass + target.mass :
@@ -44,7 +42,6 @@ export const step = (target: Matter, others: Array<Matter>): Matter => {
     y: total.y + adding.y,
   }), {x: 0, y: 0});
 
-  const speed = 20;
   return {
     ...target,
     position: {
